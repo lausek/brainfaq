@@ -1,13 +1,10 @@
-package eu.lausek.bf;
+package eu.lausek.brainfaq;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * Opcodes: ('+', 43) (',', 44) ('-', 45) ('.', 46) ('<', 60) ('>', 62) ('[',
- * 91) (']', 93)
  * 
  * @author lausek
  *
@@ -35,8 +32,6 @@ public class Main {
 		BufferedReader handle = null;
 		String path = null;
 		char[] program = null;
-		
-		args = new String[] { "test/squares.bf" };
 		
 		if (args.length == 0) {
 			error("No file specified");
