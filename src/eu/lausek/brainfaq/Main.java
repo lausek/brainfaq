@@ -1,8 +1,6 @@
 package eu.lausek.brainfaq;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -13,12 +11,12 @@ import java.util.List;
 public class Main {
 
 	private static long startTime;
-	
+
 	private static void error(String msg) {
 		log(System.err, msg);
 		System.exit(1);
 	}
-	
+
 	private static void log(String msg) {
 		log(System.out, msg);
 	}
@@ -26,24 +24,24 @@ public class Main {
 	private static void log(PrintStream stream, String msg) {
 		stream.printf("[%.3f] %s \n", (System.currentTimeMillis() - startTime) / 1000.0f, msg);
 	}
-	
+
 	public static void main(String[] args) {
 
 		BufferedReader handle = null;
 		String path = null;
 		char[] program = null;
-		
+
 		startTime = System.currentTimeMillis();
-		
+
 		if (args.length == 0) {
 			error("No file specified");
 		}
-		
+
 		path = args[0];
 
 		try {
 			handle = new BufferedReader(new FileReader(path));
-			log("Loading '"+path+"'");
+			log("Loading '" + path + "'");
 			program = parse(handle);
 		} catch (FileNotFoundException e) {
 			error("Couldn't locate file '" + path + "'");
@@ -59,10 +57,19 @@ public class Main {
 
 	}
 
+	/**
+	 * Loads a BufferedReader into a char array for execution.
+	 * 
+	 * TODO: this needs some optimization
+	 * 
+	 * @param reader
+	 * @return
+	 * @throws IOException
+	 */
 	public static char[] parse(BufferedReader reader) throws IOException {
 		final int BUFFER_SIZE = 32;
-		List<char[]> lineArray = new ArrayList<>();
-		
+		java.util.List<char[]> lineArray = new java.util.ArrayList<>();
+
 		char[] buffer = new char[BUFFER_SIZE];
 		while (reader.read(buffer) > 0) {
 			lineArray.add(buffer.clone());
@@ -112,16 +119,16 @@ public class Main {
 				break;
 			}
 		}
-		// TODO: add place
-		error("Incorrect nesting of brackets starting at "+from);
+
+		error("Incorrect nesting of brackets starting at " + from);
 		return 0;
 	}
 
 	public static void execute(char[] program) throws IOException {
 		Registers regs = new Registers();
-		
+
 		log("Executing...");
-		
+
 		for (int ptr = 0; ptr < program.length; ptr++) {
 
 			switch (program[ptr]) {
@@ -165,7 +172,7 @@ public class Main {
 				break;
 			}
 		}
-		
+
 		log("Done!");
 
 	}
