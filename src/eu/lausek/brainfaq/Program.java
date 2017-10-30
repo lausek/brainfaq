@@ -4,13 +4,21 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Arrays;
 
 public class Program {
 
+	private PrintStream stream = System.out;
 	private char[] program = null;
 
 	public Program(String path) throws FileNotFoundException, IOException {
 		parse(new BufferedReader(new FileReader(path)));
+	}
+
+	public Program(String path, PrintStream stream) throws FileNotFoundException, IOException {
+		this(path);
+		this.stream = stream;
 	}
 
 	/**
@@ -33,13 +41,30 @@ public class Program {
 
 		// TODO: check if nesting is correct
 		// TODO: only move valid commands
-		program = new char[lineArray.size() * BUFFER_SIZE];
-		int block = 0;
+		int expectedSize = lineArray.size() * BUFFER_SIZE;
+		int total = 0;
+		program = new char[expectedSize];
+
 		for (char[] line : lineArray) {
 			for (int i = 0; i < BUFFER_SIZE; i++) {
-				program[block * (BUFFER_SIZE) + i] = line[i];
+				// TODO: make this dependent on opcodes
+				switch (line[i]) {
+				case 43:
+				case 44:
+				case 45:
+				case 46:
+				case 60:
+				case 62:
+				case 91:
+				case 93:
+					program[total++] = line[i];
+					break;
+				}
 			}
-			block++;
+		}
+
+		if (total != expectedSize) {
+			program = Arrays.copyOf(program, total);
 		}
 	}
 
@@ -122,7 +147,7 @@ public class Program {
 				break;
 
 			case '.':
-				System.out.print((char) regs.get());
+				stream.print((char) regs.get());
 				break;
 
 			case ',':
