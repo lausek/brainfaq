@@ -31,6 +31,8 @@ public class Program {
 			lineArray.add(buffer.clone());
 		}
 
+		// TODO: check if nesting is correct
+		// TODO: only move valid commands
 		program = new char[lineArray.size() * BUFFER_SIZE];
 		int block = 0;
 		for (char[] line : lineArray) {
