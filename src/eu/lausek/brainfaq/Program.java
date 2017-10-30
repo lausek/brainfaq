@@ -54,6 +54,9 @@ public class Program {
 				case 62:
 				case 91:
 				case 93:
+					if(program[total] != 0) {
+						System.out.println("Override on "+total);
+					}
 					program[total++] = line[i];
 					break;
 				}

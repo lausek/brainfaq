@@ -15,43 +15,50 @@ import org.junit.jupiter.api.Test;
 import eu.lausek.brainfaq.*;
 
 public class Tests {
-	
+
 	@Before
 	public void setUp() {
 		// Disable debugger
 		Logger.debug = true;
 	}
-	
+
 	private void compare(String filename) {
 		String is = null;
 		String should = null;
-		
+
 		try {
-			should = new String(Files.readAllBytes(Paths.get("programs/output/"+filename))).trim();
+			should = new String(Files.readAllBytes(Paths.get("programs/output/" + filename))).trim();
 		} catch (IOException e1) {
 			fail();
 		}
-		
+
 		try {
 			ByteArrayOutputStream bArray = new ByteArrayOutputStream();
-			new Program("programs/"+filename+".bf", new PrintStream(bArray)).execute();
+			new Program("programs/" + filename + ".bf", new PrintStream(bArray)).execute();
 			is = bArray.toString().trim();
 		} catch (IOException e) {
 			fail();
 		}
-		
-		is.replace("\r", "");
-		should.replace("\r", "");
-		
-		is.replace("\n", "");
-		should.replace("\n", "");
-		
+
+		is = is.replaceAll("\\r|\\n", "");
+		should = should.replaceAll("\\r|\\n", "");
+
 		assertEquals(is, should);
 	}
-	
+
 	@Test
 	public void helloWorld() {
 		compare("helloworld");
 	}
 	
+	@Test
+	public void beer() {
+		compare("beer");
+	}
+	
+	@Test
+	public void mandelbrot() {
+		compare("mandelbrot");
+	}
+
 }
