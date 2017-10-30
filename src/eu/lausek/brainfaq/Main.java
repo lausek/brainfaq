@@ -33,11 +33,11 @@ public class Main {
 		String path = null;
 		char[] program = null;
 		
+		startTime = System.currentTimeMillis();
+		
 		if (args.length == 0) {
 			error("No file specified");
 		}
-		
-		startTime = System.currentTimeMillis();
 		
 		path = args[0];
 
