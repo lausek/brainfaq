@@ -123,7 +123,13 @@ public class Main {
 		error("Incorrect nesting of brackets starting at " + from);
 		return 0;
 	}
-
+	
+	/**
+	 * Execute a loaded bf program.
+	 * 
+	 * @param program
+	 * @throws IOException
+	 */
 	public static void execute(char[] program) throws IOException {
 		Registers regs = new Registers();
 
