@@ -6,7 +6,12 @@ public class Registers {
 
 	private List<Cell> posRegs = null, negRegs = null;
 	private int ptr = 0;
-
+	
+	public Registers() {
+		posRegs = new ArrayList<>();
+		negRegs = new ArrayList<>();
+	}
+	
 	public void next() {
 		ptr++;
 	}
@@ -16,44 +21,33 @@ public class Registers {
 	}
 
 	private Cell getCell() {
-		// TODO: rewrite 
+		// Access on positive index
+		int normalized = 0;
+		List<Cell> listRef = null;
+
 		if (0 <= ptr) {
-
-			if (posRegs == null) {
-				posRegs = new ArrayList<>();
-			}
-
-			if (posRegs.size() <= ptr) {
-				posRegs.add(ptr, new Cell());
-			}
-
-			return posRegs.get(ptr);
-
+			listRef = posRegs;
+			normalized = ptr;
 		} else {
-
-			int normalized = (ptr * -1) - 1;
-
-			if (negRegs == null) {
-				negRegs = new ArrayList<>();
-			}
-			
-			if(negRegs.size() <= normalized) {
-				negRegs.add(normalized, new Cell());
-			}
-
-			return negRegs.get(normalized);
-
+			listRef = negRegs;
+			normalized = (ptr * -1) - 1;
 		}
+
+		if (listRef.size() <= normalized) {
+			listRef.add(normalized, new Cell());
+		}
+
+		return listRef.get(normalized);
 	}
-	
+
 	public void set(int value) {
 		getCell().setValue(value);
 	}
-	
+
 	public int get() {
 		return getCell().getValue();
 	}
-	
+
 	public void increment() {
 		getCell().increment();
 	}

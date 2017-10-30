@@ -113,7 +113,7 @@ public class Main {
 			}
 		}
 		// TODO: add place
-		error("Incorrect nesting of brackets");
+		error("Incorrect nesting of brackets starting at "+from);
 		return 0;
 	}
 
