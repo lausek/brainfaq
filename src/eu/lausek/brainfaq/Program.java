@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Arrays;
 
 public class Program {
 
@@ -14,12 +15,12 @@ public class Program {
 	public Program(String path) throws FileNotFoundException, IOException {
 		parse(new BufferedReader(new FileReader(path)));
 	}
-	
+
 	public Program(String path, PrintStream stream) throws FileNotFoundException, IOException {
 		this(path);
 		this.stream = stream;
 	}
-	
+
 	/**
 	 * Loads a BufferedReader into a char array for execution.
 	 * 
@@ -40,8 +41,10 @@ public class Program {
 
 		// TODO: check if nesting is correct
 		// TODO: only move valid commands
-		program = new char[lineArray.size() * BUFFER_SIZE];
+		int expectedSize = lineArray.size() * BUFFER_SIZE;
 		int total = 0;
+		program = new char[expectedSize];
+
 		for (char[] line : lineArray) {
 			for (int i = 0; i < BUFFER_SIZE; i++) {
 				// TODO: make this dependent on opcodes
@@ -54,13 +57,14 @@ public class Program {
 				case 62:
 				case 91:
 				case 93:
-					if(program[total] != 0) {
-						System.out.println("Override on "+total);
-					}
 					program[total++] = line[i];
 					break;
 				}
 			}
+		}
+
+		if (total != expectedSize) {
+			program = Arrays.copyOf(program, total);
 		}
 	}
 
