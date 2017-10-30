@@ -118,58 +118,47 @@ public class Main {
 	}
 
 	public static void execute(char[] program) throws IOException {
-		List<Integer> registers = new ArrayList<>();
-		int regptr = 0;
+		Registers regs = new Registers();
 		
 		log("Executing...");
 		
 		for (int ptr = 0; ptr < program.length; ptr++) {
 
-			if (regptr < 0) {
-				error("Program tried to access a negative register");
-			}
-
-			if (registers.size() <= regptr) {
-				registers.add(regptr, 0);
-			}
-
 			switch (program[ptr]) {
 			case '>':
-				regptr++;
+				regs.next();
 				break;
 
 			case '<':
-				regptr--;
+				regs.prev();
 				break;
 
 			case '+':
-				registers.set(regptr, registers.get(regptr) + 1);
+				regs.increment();
 				break;
 
 			case '-':
-				registers.set(regptr, registers.get(regptr) - 1);
+				regs.decrement();
 				break;
 
 			case '[':
-				// If current register is 0 -> set ptr after next closing bracket
-				if (registers.get(regptr).intValue() == 0) {
+				if (regs.get() == 0) {
 					ptr = findNext(program, ptr, ']');
 				}
 				break;
 
 			case ']':
-				// If current register is not 0 -> goto previous opening bracket
-				if (registers.get(regptr).intValue() != 0) {
+				if (regs.get() != 0) {
 					ptr = findNext(program, ptr, '[') - 1;
 				}
 				break;
 
 			case '.':
-				System.out.print((char) registers.get(regptr).intValue());
+				System.out.print((char) regs.get());
 				break;
 
 			case ',':
-				registers.set(regptr, System.in.read());
+				regs.set(System.in.read());
 				break;
 
 			default:

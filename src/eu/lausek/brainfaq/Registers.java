@@ -6,13 +6,6 @@ public class Registers {
 
 	private List<Cell> posRegs = null, negRegs = null;
 	private int ptr = 0;
-	
-	
-	
-	// private static int negPointer(int ptr) {
-	// assert (ptr < 0);
-	// return (ptr * -1) - 1;
-	// }
 
 	public void next() {
 		ptr++;
@@ -22,12 +15,12 @@ public class Registers {
 		ptr--;
 	}
 
-	public Cell get() {
+	private Cell getCell() {
 		// TODO: rewrite 
 		if (0 <= ptr) {
 
-			if (negRegs == null) {
-				negRegs = new ArrayList<>();
+			if (posRegs == null) {
+				posRegs = new ArrayList<>();
 			}
 
 			if (posRegs.size() <= ptr) {
@@ -53,12 +46,20 @@ public class Registers {
 		}
 	}
 	
+	public void set(int value) {
+		getCell().setValue(value);
+	}
+	
+	public int get() {
+		return getCell().getValue();
+	}
+	
 	public void increment() {
-		get().increment();
+		getCell().increment();
 	}
 
 	public void decrement() {
-		get().decrement();
+		getCell().decrement();
 	}
 
 }

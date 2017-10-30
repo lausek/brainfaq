@@ -4,8 +4,12 @@ public class Cell {
 	
 	private int value = 0;
 	
-	public int get() {
+	public int getValue() {
 		return value;
+	}
+	
+	public void setValue(int value) {
+		this.value = value;
 	}
 	
 	public void increment() {
