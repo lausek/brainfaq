@@ -12,6 +12,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		Program program = null;
 		String path = null;
 
 		if (args.length == 0) {
@@ -20,7 +21,6 @@ public class Main {
 
 		path = args[0];
 		
-		Program program = null;
 		try {
 			Logger.log("Loading '" + path + "'");
 			program = new Program(path);
