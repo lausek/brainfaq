@@ -11,7 +11,7 @@ public class Program {
 
 	public Program(String path) throws FileNotFoundException, IOException {
 		// parsers are so stateful, we want to drop them immediately
-		try(Parser p = new Parser(path)) {
+		try (Parser p = new Parser(path)) {
 			program = p.parse();
 		}
 	}
@@ -20,7 +20,7 @@ public class Program {
 		this(path);
 		this.stream = stream;
 	}
-	
+
 	/**
 	 * Find the next correct occurrence of bracket. If bracket is '[' search will go
 	 * forward, otherwise backwards.
@@ -71,7 +71,7 @@ public class Program {
 
 		for (int ptr = 0; ptr < program.length; ptr++) {
 
-			// is cell a number? 0 (47 ascii) to 9 (57 ascii)
+			// is cell a number? 0 (48 ascii) to 9 (57 ascii)
 			if (47 < program[ptr] && program[ptr] < 58) {
 				// translate char into int
 				times = program[ptr] - 48;

@@ -20,24 +20,16 @@ public class Registers {
 	public final int REGISTER_SIZE = 30000;
 
 	private Cell[] regs;
-	private int ptr = REGISTER_SIZE / 2; // Start in the middle
+	private int ptr = REGISTER_SIZE / 2; // start in the middle
 
 	public Registers() {
 		regs = new Cell[REGISTER_SIZE];
-	}
-
-	public void next() {
-		next(1);
 	}
 	
 	public void next(int times) {
 		ptr += times;
 	}
 
-	public void prev() {
-		prev(1);
-	}
-	
 	public void prev(int times) {
 		ptr -= times;
 	}
