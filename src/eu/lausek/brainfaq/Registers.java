@@ -1,5 +1,7 @@
 package eu.lausek.brainfaq;
 
+import java.util.Arrays;
+
 /**
  * If a register pointer is advanced over more than one cell at a time, it could
  * be the case that a call to `add` skips several indices making them
@@ -20,13 +22,27 @@ public class Registers {
 	private int ptr = REGISTER_SIZE / 2; // start in the middle
 
 	public Registers() {
-		regs = new Cell[REGISTER_SIZE];
+		scaleRegisters();
+	}
+	
+	private void scaleRegisters() {
+		int i = 0;
 		
-		for(int i = 0; i < REGISTER_SIZE; i++) {
+		// if registers haven't been initialized yet; do it now
+		if(regs == null) {
+			regs = new Cell[REGISTER_SIZE];
+		} else {
+			i = regs.length;
+			// copy every object reference if we already have something in regs
+			regs = Arrays.copyOf(regs, regs.length * 2);			
+		}
+		
+		// create objects for recently added cells
+		for (; i < regs.length; i++) {
 			regs[i] = new Cell();
 		}
 	}
-	
+
 	public void next(int times) {
 		ptr += times;
 	}
@@ -36,6 +52,9 @@ public class Registers {
 	}
 
 	private Cell getCell() {
+		if (regs.length <= ptr) {
+			scaleRegisters();
+		}
 		return regs[ptr];
 	}
 
@@ -50,7 +69,7 @@ public class Registers {
 	public void increment(int times) {
 		getCell().increment(times);
 	}
-	
+
 	public void decrement(int times) {
 		getCell().decrement(times);
 	}
@@ -76,23 +95,23 @@ public class Registers {
 }
 
 class Cell {
-	
+
 	private int value = 0;
-	
+
 	public int getValue() {
 		return value;
 	}
-	
+
 	public void setValue(int value) {
 		this.value = value;
 	}
-	
+
 	public void increment(int times) {
 		value += times;
 	}
-	
+
 	public void decrement(int times) {
 		value -= times;
 	}
-	
+
 }
