@@ -114,8 +114,10 @@ public class Parser implements java.io.Closeable {
 				}
 
 			}
-
-			doInsertStep();
+			
+			if (lastChar != LAST_CHAR_DEFAULT) {
+				doInsertStep();				
+			}
 
 		}
 
