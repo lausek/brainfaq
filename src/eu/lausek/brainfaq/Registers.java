@@ -27,11 +27,19 @@ public class Registers {
 	}
 
 	public void next() {
-		ptr++;
+		next(1);
+	}
+	
+	public void next(int times) {
+		ptr += times;
 	}
 
 	public void prev() {
-		ptr--;
+		prev(1);
+	}
+	
+	public void prev(int times) {
+		ptr -= times;
 	}
 
 	private Cell getCell() {
@@ -52,9 +60,17 @@ public class Registers {
 	public void increment() {
 		getCell().increment();
 	}
+	
+	public void increment(int times) {
+		getCell().increment(times);
+	}
 
 	public void decrement() {
 		getCell().decrement();
+	}
+	
+	public void decrement(int times) {
+		getCell().decrement(times);
 	}
 
 	/**
@@ -90,11 +106,19 @@ class Cell {
 	}
 	
 	public void increment() {
-		value++;
+		increment(1);
+	}
+	
+	public void increment(int times) {
+		value += times;
 	}
 	
 	public void decrement() {
-		value--;
+		decrement(1);
+	}
+	
+	public void decrement(int times) {
+		value -= times;
 	}
 	
 }
