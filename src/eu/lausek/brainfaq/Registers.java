@@ -81,7 +81,7 @@ public class Registers {
 		System.out.println("\tReg: Val");
 		int i = 0;
 		for (Cell c : regs) {
-			if (c == null) {
+			if (c.getValue() != 0) {
 				continue;
 			}
 			System.out.printf("\t%d: %d\t", i, c.getValue());
