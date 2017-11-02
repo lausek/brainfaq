@@ -5,9 +5,6 @@ package eu.lausek.brainfaq;
  * be the case that a call to `add` skips several indices making them
  * effectively inconsistent. (If ArrayList was used)
  * 
- * We only want to initialize a Cell if it is actively used. This can be ensured
- * when the Cell is requested inside the Registers `get` method.
- * 
  * Our target is to have a list, that is also capable of managing negative and
  * skipped indices.
  * 
@@ -24,6 +21,10 @@ public class Registers {
 
 	public Registers() {
 		regs = new Cell[REGISTER_SIZE];
+		
+		for(int i = 0; i < REGISTER_SIZE; i++) {
+			regs[i] = new Cell();
+		}
 	}
 	
 	public void next(int times) {
@@ -35,9 +36,6 @@ public class Registers {
 	}
 
 	private Cell getCell() {
-		if (regs[ptr] == null) {
-			regs[ptr] = new Cell();
-		}
 		return regs[ptr];
 	}
 
