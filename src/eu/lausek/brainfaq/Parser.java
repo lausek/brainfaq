@@ -49,7 +49,7 @@ public class Parser implements java.io.Closeable {
 
 		// if lastChar has been added at least MORE_TIMES_THAN and lastChar can be
 		// compressed
-		if (times > MORE_TIMES_THAN && codeCompressSupported(lastChar)) {
+		if (MORE_TIMES_THAN < times && codeCompressSupported(lastChar)) {
 			program[total++] = (char) (48 + times);
 			program[total++] = lastChar;
 		} else {
