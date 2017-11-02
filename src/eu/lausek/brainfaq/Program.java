@@ -1,11 +1,8 @@
 package eu.lausek.brainfaq;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
 
 public class Program {
 
@@ -13,59 +10,17 @@ public class Program {
 	private char[] program = null;
 
 	public Program(String path) throws FileNotFoundException, IOException {
-		parse(new BufferedReader(new FileReader(path)));
+		// parsers are so stateful, we want to drop them immediately
+		try(Parser p = new Parser(path)) {
+			program = p.parse();
+		}
 	}
 
 	public Program(String path, PrintStream stream) throws FileNotFoundException, IOException {
 		this(path);
 		this.stream = stream;
 	}
-
-	/**
-	 * Loads a BufferedReader into a char array for execution.
-	 * 
-	 * TODO: this needs some optimization
-	 * 
-	 * @param reader
-	 * @return
-	 * @throws IOException
-	 */
-	public void parse(BufferedReader reader) throws IOException {
-		final int BUFFER_SIZE_BLOCK = 32;
-		final int BUFFER_SIZE_START = 10000;
-
-		program = new char[BUFFER_SIZE_START];
-
-		char[] buffer = new char[BUFFER_SIZE_BLOCK];
-		int total = 0;
-
-		while (reader.read(buffer) > 0) {
-			for (int i = 0; i < BUFFER_SIZE_BLOCK; i++) {
-				// TODO: make this dependent on opcodes
-				switch (buffer[i]) {
-				case 43:
-				case 44:
-				case 45:
-				case 46:
-				case 60:
-				case 62:
-				case 91:
-				case 93:
-					program[total++] = buffer[i];
-
-					// If program array is too short, resize it to the double length
-					if (total == program.length) {
-						program = Arrays.copyOf(program, program.length * 2);
-					}
-
-					break;
-				}
-			}
-		}
-
-		program = Arrays.copyOf(program, total);
-	}
-
+	
 	/**
 	 * Find the next correct occurrence of bracket. If bracket is '[' search will go
 	 * forward, otherwise backwards.
@@ -110,26 +65,34 @@ public class Program {
 	 */
 	public void execute() throws IOException {
 		Registers regs = new Registers();
+		int times = 1;
 
 		Logger.log("Executing...");
 
 		for (int ptr = 0; ptr < program.length; ptr++) {
 
+			// is cell a number? 0 (47 ascii) to 9 (57 ascii)
+			if (47 < program[ptr] && program[ptr] < 58) {
+				// translate char into int
+				times = program[ptr] - 48;
+				continue;
+			}
+
 			switch (program[ptr]) {
 			case '>':
-				regs.next();
+				regs.next(times);
 				break;
 
 			case '<':
-				regs.prev();
+				regs.prev(times);
 				break;
 
 			case '+':
-				regs.increment();
+				regs.increment(times);
 				break;
 
 			case '-':
-				regs.decrement();
+				regs.decrement(times);
 				break;
 
 			case '[':
@@ -153,8 +116,10 @@ public class Program {
 				break;
 
 			default:
-				break;
+				continue;
 			}
+
+			times = 1;
 		}
 
 		Logger.log("Done!");
