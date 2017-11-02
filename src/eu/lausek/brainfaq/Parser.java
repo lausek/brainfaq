@@ -8,8 +8,18 @@ import java.util.Arrays;
 
 public class Parser implements java.io.Closeable {
 	
+	private final int BUFFER_SIZE_BLOCK = 32;
+	private final int BUFFER_SIZE_START = 10000;
+	
+	// how many adjacent chars are the minimum for compression?
+	private final int MORE_TIMES_THAN = 2; 
+	
 	private BufferedReader reader;
 	private char[] program = null;
+	
+	// variables for parsing run
+	private int total = 0, times = 1, i = 0;
+	private char lastChar = ' ';
 	
 	public Parser(String path) throws FileNotFoundException {
 		reader = new BufferedReader(new FileReader(path));
@@ -21,6 +31,23 @@ public class Parser implements java.io.Closeable {
 		}
 	}
 
+	public void doInsertStep() {
+		// if program array is too short, resize it to the double length
+		resizeIfOverflow(total + 2);
+
+		if (times > MORE_TIMES_THAN && codeCompressSupported(lastChar)) {
+			program[total++] = (char) (48 + times);
+			program[total++] = lastChar;
+		} else {
+			for (int x = 1; x <= times; x++) {
+				program[total++] = lastChar;
+			}
+		}
+
+		times = 1;
+		lastChar = ' ';
+	}
+	
 	/**
 	 * Commands, for which inline compression is allowed/supported
 	 * 
@@ -34,22 +61,15 @@ public class Parser implements java.io.Closeable {
 	/**
 	 * Loads a BufferedReader into a char array for execution.
 	 * 
-	 * TODO: this needs some optimization
-	 * 
 	 * @param reader
 	 * @return
 	 * @throws IOException
 	 */
 	public char[] parse() throws IOException {
-		final int BUFFER_SIZE_BLOCK = 32;
-		final int BUFFER_SIZE_START = 10000;
-		final int MORE_TIMES_THAN = 2;
-
+		
 		program = new char[BUFFER_SIZE_START];
 
 		char[] buffer = new char[BUFFER_SIZE_BLOCK];
-		int total = 0, times = 1, i = 0;
-		char lastChar = ' ';
 
 		// put = how many chars have been transferred
 		for (int put = reader.read(buffer); put > 0; put = reader.read(buffer)) {
@@ -65,46 +85,16 @@ public class Parser implements java.io.Closeable {
 				case 91:
 				case 93:
 					if (lastChar != ' ') {
-						if (lastChar != buffer[i]) {
-
-							// If program array is too short, resize it to the double length
-							resizeIfOverflow(total + 2);
-
-							if (times > MORE_TIMES_THAN && codeCompressSupported(lastChar)) {
-								program[total++] = (char) (48 + times);
-								program[total++] = lastChar;
-							} else {
-								for (int x = 1; x <= times; x++) {
-									program[total++] = lastChar;
-								}
-							}
-
-							times = 1;
-							lastChar = ' ';
-
+						
+						// the maximum amount we can store inside a char is 9.
+						// if times gets bigger than 9, add current char and reset counter
+						if (lastChar != buffer[i]
+						|| 9 < times + 1) {
+							doInsertStep();
 						} else {
-
-							// TODO: if times gets bigger than 36, add current char and reset counter
-							if (9 < times + 1) {
-								// If program array is too short, resize it to the double length
-								resizeIfOverflow(total + 2);
-
-								if (times > MORE_TIMES_THAN && codeCompressSupported(lastChar)) {
-									program[total++] = (char) (48 + times);
-									program[total++] = lastChar;
-								} else {
-									for (int x = 1; x <= times; x++) {
-										program[total++] = lastChar;
-									}
-								}
-
-								lastChar = ' ';
-								times = 1;
-							} else {
-								times++;
-							}
-
+							times++;
 						}
+						
 					}
 
 					lastChar = buffer[i];
@@ -115,26 +105,8 @@ public class Parser implements java.io.Closeable {
 			}
 
 			if (lastChar != ' ') {
-
-				// If program array is too short, resize it to the double length
-				resizeIfOverflow(total + 2);
-
-				if (times > MORE_TIMES_THAN && codeCompressSupported(lastChar)) {
-					program[total++] = (char) (48 + times);
-					program[total++] = lastChar;
-				} else {
-					for (int x = 1; x <= times; x++) {
-						program[total++] = lastChar;
-					}
-				}
-
-				times = 1;
-				lastChar = ' ';
-
+				doInsertStep();
 			}
-
-			// TODO: add code from change clause here too. lastChar could be skipped
-			// eventually
 
 		}
 
