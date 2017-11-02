@@ -31,24 +31,18 @@ public class Program {
 	 * @throws IOException
 	 */
 	public void parse(BufferedReader reader) throws IOException {
-		final int BUFFER_SIZE = 32;
-		java.util.List<char[]> lineArray = new java.util.ArrayList<>();
+		final int BUFFER_SIZE_BLOCK = 32;
+		final int BUFFER_SIZE_START = 10000;
 
-		char[] buffer = new char[BUFFER_SIZE];
-		while (reader.read(buffer) > 0) {
-			lineArray.add(buffer.clone());
-		}
+		program = new char[BUFFER_SIZE_START];
 
-		// TODO: check if nesting is correct
-		// TODO: only move valid commands
-		int expectedSize = lineArray.size() * BUFFER_SIZE;
+		char[] buffer = new char[BUFFER_SIZE_BLOCK];
 		int total = 0;
-		program = new char[expectedSize];
 
-		for (char[] line : lineArray) {
-			for (int i = 0; i < BUFFER_SIZE; i++) {
+		while (reader.read(buffer) > 0) {
+			for (int i = 0; i < BUFFER_SIZE_BLOCK; i++) {
 				// TODO: make this dependent on opcodes
-				switch (line[i]) {
+				switch (buffer[i]) {
 				case 43:
 				case 44:
 				case 45:
@@ -57,15 +51,19 @@ public class Program {
 				case 62:
 				case 91:
 				case 93:
-					program[total++] = line[i];
+					program[total++] = buffer[i];
+
+					// If program array is too short, resize it to the double length
+					if (total == program.length) {
+						program = Arrays.copyOf(program, program.length * 2);
+					}
+
 					break;
 				}
 			}
 		}
 
-		if (total != expectedSize) {
-			program = Arrays.copyOf(program, total);
-		}
+		program = Arrays.copyOf(program, total);
 	}
 
 	/**
