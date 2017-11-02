@@ -19,7 +19,7 @@ public class Tests {
 	@Before
 	public void setUp() {
 		// Disable debugger
-		Logger.debug = true;
+		Logger.setActive(false);
 	}
 
 	private void compare(String filename) {

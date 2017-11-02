@@ -4,16 +4,20 @@ import java.io.PrintStream;
 
 public class Logger {
 
-	public static boolean debug = false;
+	private static boolean enabled = true;
 	private static final long startTime;
 
 	static {
 		startTime = System.currentTimeMillis();
 	}
-
+	
+	public static void setActive(boolean state) {
+		Logger.enabled = state;
+	}
+	
 	public static void error(String msg) {
 		log(System.err, msg);
-		if (!debug) {
+		if (enabled) {
 			System.exit(1);
 		}
 	}
@@ -23,7 +27,7 @@ public class Logger {
 	}
 
 	public static void log(PrintStream stream, String msg) {
-		if (!debug) {
+		if (enabled) {
 			stream.printf("[%.3f] %s \n", (System.currentTimeMillis() - startTime) / 1000.0f, msg);
 		}
 	}
