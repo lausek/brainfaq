@@ -18,7 +18,7 @@ public class Tests {
 
 	@Before
 	public void setUp() {
-		// Disable debugger
+		// disable debugger
 		Logger.setActive(false);
 	}
 
