@@ -10,7 +10,7 @@ public class Program {
 	private char[] program = null;
 
 	public Program(String path) throws FileNotFoundException, IOException {
-		// Parsers are so stateful, we want to drop them immediately
+		// parsers are so stateful, we want to drop them immediately
 		try(Parser p = new Parser(path)) {
 			program = p.parse();
 		}
