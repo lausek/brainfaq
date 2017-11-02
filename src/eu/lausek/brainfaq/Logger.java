@@ -15,6 +15,10 @@ public class Logger {
 		Logger.enabled = state;
 	}
 	
+	public static boolean isActive() {
+		return Logger.enabled;
+	}
+	
 	public static void error(String msg) {
 		log(System.err, msg);
 		if (enabled) {
