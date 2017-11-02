@@ -38,9 +38,7 @@ public class Program {
 		int depth = 0; // how deep is the nesting level?
 
 		for (int i = from + step; 0 <= i && i < program.length; i += step) {
-			switch (program[i]) {
-			case '[':
-			case ']':
+			if (program[i] == '[' || program[i] == ']') {
 				if (bracket == program[i]) {
 					if (depth == 0) {
 						return i;
@@ -49,7 +47,6 @@ public class Program {
 				} else {
 					depth--;
 				}
-				break;
 			}
 		}
 
