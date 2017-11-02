@@ -57,16 +57,8 @@ public class Registers {
 		return getCell().getValue();
 	}
 
-	public void increment() {
-		getCell().increment();
-	}
-	
 	public void increment(int times) {
 		getCell().increment(times);
-	}
-
-	public void decrement() {
-		getCell().decrement();
 	}
 	
 	public void decrement(int times) {
@@ -105,16 +97,8 @@ class Cell {
 		this.value = value;
 	}
 	
-	public void increment() {
-		increment(1);
-	}
-	
 	public void increment(int times) {
 		value += times;
-	}
-	
-	public void decrement() {
-		decrement(1);
 	}
 	
 	public void decrement(int times) {
