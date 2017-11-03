@@ -63,7 +63,7 @@ public class Parser implements java.io.Closeable {
 	}
 
 	/**
-	 * Check if a Stack contains correctly opening and closing brackets. Returns
+	 * Check if a Stack contains correct opening and closing brackets. Returns
 	 * false if not.
 	 * 
 	 * @param bracketStack
