@@ -60,5 +60,14 @@ public class Tests {
 	public void mandelbrot() {
 		compare("mandelbrot");
 	}
-
+	
+	@Test
+	public void unicode() {
+		try {
+			new Program("programs/unicode.bf").execute();
+		} catch (IOException e) {
+			fail();
+		}
+	}
+	
 }
